@@ -1,8 +1,8 @@
-obj/local/armeabi/objs/data_op/Messages.o: jni/Messages.c jni/Messages.h \
- jni/Log.h jni/Heap.h
+obj/local/armeabi/objs/data_op/Messages.o: jni/mqtt_test/Messages.c \
+ jni/mqtt_test/Messages.h jni/mqtt_test/Log.h jni/mqtt_test/Heap.h
 
-jni/Messages.h:
+jni/mqtt_test/Messages.h:
 
-jni/Log.h:
+jni/mqtt_test/Log.h:
 
-jni/Heap.h:
+jni/mqtt_test/Heap.h:

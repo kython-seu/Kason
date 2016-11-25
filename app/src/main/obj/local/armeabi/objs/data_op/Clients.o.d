@@ -1,10 +1,11 @@
-obj/local/armeabi/objs/data_op/Clients.o: jni/Clients.c jni/Clients.h \
- jni/MQTTClient.h jni/MQTTClientPersistence.h jni/LinkedList.h
+obj/local/armeabi/objs/data_op/Clients.o: jni/mqtt_test/Clients.c \
+ jni/mqtt_test/Clients.h jni/mqtt_test/MQTTClient.h \
+ jni/mqtt_test/MQTTClientPersistence.h jni/mqtt_test/LinkedList.h
 
-jni/Clients.h:
+jni/mqtt_test/Clients.h:
 
-jni/MQTTClient.h:
+jni/mqtt_test/MQTTClient.h:
 
-jni/MQTTClientPersistence.h:
+jni/mqtt_test/MQTTClientPersistence.h:
 
-jni/LinkedList.h:
+jni/mqtt_test/LinkedList.h:

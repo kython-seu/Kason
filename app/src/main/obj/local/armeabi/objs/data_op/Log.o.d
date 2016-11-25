@@ -1,33 +1,36 @@
-obj/local/armeabi/objs/data_op/Log.o: jni/Log.c jni/Log.h \
- jni/MQTTPacket.h jni/Socket.h jni/LinkedList.h jni/Clients.h \
- jni/MQTTClient.h jni/MQTTClientPersistence.h jni/MQTTPacketOut.h \
- jni/MQTTProtocol.h jni/MQTTProtocolOut.h jni/Messages.h \
- jni/MQTTProtocolClient.h jni/StackTrace.h jni/Thread.h
+obj/local/armeabi/objs/data_op/Log.o: jni/mqtt_test/Log.c \
+ jni/mqtt_test/Log.h jni/mqtt_test/MQTTPacket.h jni/mqtt_test/Socket.h \
+ jni/mqtt_test/LinkedList.h jni/mqtt_test/Clients.h \
+ jni/mqtt_test/MQTTClient.h jni/mqtt_test/MQTTClientPersistence.h \
+ jni/mqtt_test/MQTTPacketOut.h jni/mqtt_test/MQTTProtocol.h \
+ jni/mqtt_test/MQTTProtocolOut.h jni/mqtt_test/Messages.h \
+ jni/mqtt_test/MQTTProtocolClient.h jni/mqtt_test/StackTrace.h \
+ jni/mqtt_test/Thread.h
 
-jni/Log.h:
+jni/mqtt_test/Log.h:
 
-jni/MQTTPacket.h:
+jni/mqtt_test/MQTTPacket.h:
 
-jni/Socket.h:
+jni/mqtt_test/Socket.h:
 
-jni/LinkedList.h:
+jni/mqtt_test/LinkedList.h:
 
-jni/Clients.h:
+jni/mqtt_test/Clients.h:
 
-jni/MQTTClient.h:
+jni/mqtt_test/MQTTClient.h:
 
-jni/MQTTClientPersistence.h:
+jni/mqtt_test/MQTTClientPersistence.h:
 
-jni/MQTTPacketOut.h:
+jni/mqtt_test/MQTTPacketOut.h:
 
-jni/MQTTProtocol.h:
+jni/mqtt_test/MQTTProtocol.h:
 
-jni/MQTTProtocolOut.h:
+jni/mqtt_test/MQTTProtocolOut.h:
 
-jni/Messages.h:
+jni/mqtt_test/Messages.h:
 
-jni/MQTTProtocolClient.h:
+jni/mqtt_test/MQTTProtocolClient.h:
 
-jni/StackTrace.h:
+jni/mqtt_test/StackTrace.h:
 
-jni/Thread.h:
+jni/mqtt_test/Thread.h:

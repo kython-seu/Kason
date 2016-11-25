@@ -1,12 +1,13 @@
-obj/local/armeabi/objs/data_op/Heap.o: jni/Heap.c jni/Tree.h jni/Log.h \
- jni/StackTrace.h jni/Thread.h jni/Heap.h
+obj/local/armeabi/objs/data_op/Heap.o: jni/mqtt_test/Heap.c \
+ jni/mqtt_test/Tree.h jni/mqtt_test/Log.h jni/mqtt_test/StackTrace.h \
+ jni/mqtt_test/Thread.h jni/mqtt_test/Heap.h
 
-jni/Tree.h:
+jni/mqtt_test/Tree.h:
 
-jni/Log.h:
+jni/mqtt_test/Log.h:
 
-jni/StackTrace.h:
+jni/mqtt_test/StackTrace.h:
 
-jni/Thread.h:
+jni/mqtt_test/Thread.h:
 
-jni/Heap.h:
+jni/mqtt_test/Heap.h:

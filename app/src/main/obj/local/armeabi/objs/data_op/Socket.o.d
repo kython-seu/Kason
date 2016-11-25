@@ -1,19 +1,20 @@
-obj/local/armeabi/objs/data_op/Socket.o: jni/Socket.c jni/Socket.h \
- jni/LinkedList.h jni/Log.h jni/SocketBuffer.h jni/Messages.h \
- jni/StackTrace.h jni/Thread.h jni/Heap.h
+obj/local/armeabi/objs/data_op/Socket.o: jni/mqtt_test/Socket.c \
+ jni/mqtt_test/Socket.h jni/mqtt_test/LinkedList.h jni/mqtt_test/Log.h \
+ jni/mqtt_test/SocketBuffer.h jni/mqtt_test/Messages.h \
+ jni/mqtt_test/StackTrace.h jni/mqtt_test/Thread.h jni/mqtt_test/Heap.h
 
-jni/Socket.h:
+jni/mqtt_test/Socket.h:
 
-jni/LinkedList.h:
+jni/mqtt_test/LinkedList.h:
 
-jni/Log.h:
+jni/mqtt_test/Log.h:
 
-jni/SocketBuffer.h:
+jni/mqtt_test/SocketBuffer.h:
 
-jni/Messages.h:
+jni/mqtt_test/Messages.h:
 
-jni/StackTrace.h:
+jni/mqtt_test/StackTrace.h:
 
-jni/Thread.h:
+jni/mqtt_test/Thread.h:
 
-jni/Heap.h:
+jni/mqtt_test/Heap.h:

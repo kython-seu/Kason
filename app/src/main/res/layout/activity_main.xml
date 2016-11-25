@@ -20,9 +20,51 @@
         android:text="Start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="12dp"
+        android:id="@+id/button"
         android:layout_below="@+id/textView"
-        android:layout_toEndOf="@+id/textView"
-        android:layout_marginStart="27dp"
-        android:layout_marginTop="36dp"
-        android:id="@+id/button" />
+        android:layout_toEndOf="@+id/textView" />
+
+    <Button
+        android:text="MqttPushStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button"
+        android:layout_marginTop="22dp"
+        android:id="@+id/mqttPushStart"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="mqttPushStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mqttPushStart"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="19dp"
+        android:id="@+id/mqttPushStop"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="PressTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mqttPushStop"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="51dp"
+        android:id="@+id/pressText"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="sendMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pressText"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="21dp"
+        android:id="@+id/sendMessage"
+        android:layout_alignParentEnd="true" />
+
 </RelativeLayout>
