@@ -2,9 +2,9 @@
 // Created by kason_zhang on 11/23/2016.
 //
 #include "mqttPush_MqttEngine.h"
-
 #include "MQTTAsync.h"
 #include "MQTTClientPersistence.h"
+#include "MQTTClient.h"
 
 #include <stdio.h>
 #include <signal.h>
@@ -56,7 +56,7 @@ struct {
     int showtopics;
     int keepalive;
 } opts = {
-        "stdout-subscriber-async", 1, '\n', 2, "admin", "password", "10.64.24.138", "61613", 0, 10
+        "stdout-subscriber-async", 1, '\n', 2, NULL, NULL, "10.64.24.53", "8883", 0, 1800
 };
 
 int messageArrived(void *context, char *topicName, int topicLen, MQTTAsync_message *message) {
@@ -65,12 +65,14 @@ int messageArrived(void *context, char *topicName, int topicLen, MQTTAsync_messa
         printf("%s\t", topicName);
     }
     //callJavaMethod((jint)1000);
+    LOGI("message length is %d",message->payloadlen);
+
     if (opts.nodelimiter) {
-        LOGI("%s", (char *) message->payload);
+        LOGI("nodelimiter%s", (char *)message->payload);
         //callJavaMethod2(message->payload);
         printf("%.*s", message->payloadlen, (char *) message->payload);
     } else {
-        LOGI("%s", (char *) message->payload);
+        LOGI("no_nodelimiter%s", (char *)message->payload);
 
         //callJavaMethod2(message->payload);
         printf("%.*s%c", message->payloadlen, (char *) message->payload, opts.delimiter);
@@ -101,7 +103,7 @@ void onSubscribeFailure(void *context, MQTTAsync_failureData *response) {
 
 //connect fail callback
 void onConnectFailure(void *context, MQTTAsync_failureData *response) {
-//    printf("Connect failed, rc %d\n", response->code);//don't print this,it will cause
+    // printf("Connect failed, rc %d\n", response->code);//don't print this,it will cause
     //null point exception when no network
     LOGE("onConnectFailure start to disconnect");
     //LOGI("Connect failed, rc %d\n", response->code);
@@ -155,8 +157,8 @@ void connectionLost(void *context, char *cause) {
         //do something callback to Java and close the Connect
         finished = 1;
     }
-}
 
+}
 
 //Connection State Callback to call Java
 void onStartConnectCallback(JNIEnv *env) {
@@ -219,16 +221,18 @@ JNIEXPORT jboolean JNICALL Java_mqttPush_MqttEngine_jniDeInit
     LOGI("MQTT JNI deinit completed");
     return JNI_TRUE;
 }
-
 MQTTAsync client;
 MQTTAsync_disconnectOptions disc_opts = MQTTAsync_disconnectOptions_initializer;
 MQTTAsync_connectOptions conn_opts = MQTTAsync_connectOptions_initializer;
+MQTTAsync_willOptions wopts = MQTTAsync_willOptions_initializer;// will topic and will message
+MQTTAsync_SSLOptions ssl_opts = MQTTAsync_SSLOptions_initializer;//SSL
 JNIEXPORT jint JNICALL Java_mqttPush_MqttEngine_connect
         (JNIEnv *env, jobject thiz) {
+    LOGI("open ssl, test it");
     int rc = 0;
     char url[100];
     opts.showtopics = 1;
-    sprintf(url, "%s:%s", opts.host, opts.port);
+    sprintf(url, "%s://%s:%s", "ssl",opts.host, opts.port);
     LOGI("Start to Create connection");
     LOGI("url is %s ", url);
     if (client == NULL) {
@@ -249,18 +253,42 @@ JNIEXPORT jint JNICALL Java_mqttPush_MqttEngine_connect
     conn_opts.password = opts.password;
     conn_opts.onSuccess = onConnect;
     conn_opts.onFailure = onConnectFailure;
+    /**
+     * set will configration
+     */
+    conn_opts.will = &wopts;
+    conn_opts.will->message = "will message";
+    conn_opts.will->qos = 1;
+    conn_opts.will->retained = 0;
+    conn_opts.will->topicName = "will topic";
+    conn_opts.will = NULL;
+    /**
+     * ssl enable?
+     */
+    ssl_opts.enableServerCertAuth = 1;
+    conn_opts.ssl = &ssl_opts;
+    char *server_key_file = "/mnt/sdcard/mqttca/ca.pem";
+    conn_opts.ssl->trustStore = server_key_file;
+    char *client_key_file = "/mnt/sdcard/mqttca/client.pem";
+    conn_opts.ssl->keyStore = client_key_file;
+    conn_opts.ssl->privateKey = "/mnt/sdcard/mqttca/client.key";
+    //conn_opts.ssl->privateKeyPassword = "cs";
+    ssl_opts.enabledCipherSuites = "TLSv1";
+
     conn_opts.context = client;
+
     LOGI("GOING TO CONNECT");
     onStartConnectCallback(env);
     if ((rc = MQTTAsync_connect(client, &conn_opts)) != MQTTASYNC_SUCCESS) {
         LOGI("fAILED %d", rc);
         printf("Failed to start connect, return code %d\n", rc);
         //exit(EXIT_FAILURE);
-        return (jint) 4999;
+        return (jint)-1;
+    }else {
+        LOGI("MQTT connect successfully");
+        onFinishedConnectCallback(env);
     }
-    onFinishedConnectCallback(env);
-    LOGI("UPDATE");
-    LOGI("AFTER MQTTAsync_connect %d", rc);
+    LOGI("after MQTTAsync_connect rc = %d", rc);
     while (!subscribed)
 #if defined(WIN32)
         Sleep(100);
@@ -268,7 +296,7 @@ JNIEXPORT jint JNICALL Java_mqttPush_MqttEngine_connect
         usleep(10000L);
 #endif
     LOGI("do sending");
-    MQTTAsync_responseOptions opts = MQTTAsync_responseOptions_initializer;
+    /*MQTTAsync_responseOptions opts = MQTTAsync_responseOptions_initializer;
     opts.onSuccess = onSend;
     opts.onFailure = onSendFailure;
     opts.context = client;
@@ -279,12 +307,12 @@ JNIEXPORT jint JNICALL Java_mqttPush_MqttEngine_connect
     pubmsg.retained = 0;
     if ((rc = MQTTAsync_sendMessage(client, topic, &pubmsg, &opts)) != MQTTASYNC_SUCCESS) {
         LOGE("fAILED TO START SEND mESSAGE rc = %d\n", rc);
-    }
+    }*/
     return EXIT_SUCCESS;
 }
 
 JNIEXPORT jboolean JNICALL Java_mqttPush_MqttEngine_disconnect
-        (JNIEnv *env, jobject thiz) {
+        (JNIEnv *env, jobject thiz){
     //finished = 1;
     LOGI("java call disconnect");
     if (client == NULL) {
@@ -309,19 +337,26 @@ JNIEXPORT jboolean JNICALL Java_mqttPush_MqttEngine_disconnect
 }
 //Send Message to Server
 JNIEXPORT void JNICALL Java_mqttPush_MqttEngine_sendMessage
-        (JNIEnv *env, jobject thiz) {
+        (JNIEnv *env, jobject thiz,jstring responseToServer){
     if (client == NULL) {
         LOGI("It seems that you haven't establish creation beetween Android Client and Broker");
         return;
     }
+    //get the data
+    //char *c_responseToServer = jstringTostring(env,responseToServer);
+    char *c_responseToServer = (char*)(*env)->GetStringUTFChars(env,responseToServer,NULL);
+
+    LOGI("jstring to char* %s",c_responseToServer);
+    (*env)->ReleaseStringUTFChars(env,responseToServer,c_responseToServer);
     int rc;
     MQTTAsync_responseOptions opts = MQTTAsync_responseOptions_initializer;
     opts.onSuccess = onSend;
     opts.onFailure = onSendFailure;
     opts.context = client;
     MQTTAsync_message pubmsg = MQTTAsync_message_initializer;
-    pubmsg.payload = "hello";
-    pubmsg.payloadlen = 6;
+    pubmsg.payload = c_responseToServer;
+    //pubmsg.payload = c_responseToServer;
+    pubmsg.payloadlen = strlen(c_responseToServer);//message length
     pubmsg.qos = 2;
     pubmsg.retained = 0;
 
@@ -342,3 +377,4 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
     }
     return JNI_VERSION_1_6;
 }
+

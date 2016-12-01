@@ -31,7 +31,7 @@ public class MqttEngine {
     public native boolean disconnect();
 
     public native String getCommand();
-    public native void sendMessage();
+    public native void sendMessage(String responseToServer);
 
     public native int getGlobal();
     //start connect callback

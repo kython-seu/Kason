@@ -1,6 +1,8 @@
-obj/local/armeabi/objs/mqttjni/LinkedList.o: jni/mqtt/LinkedList.c \
- jni/mqtt/LinkedList.h jni/mqtt/Heap.h
+D:/workspace/mqtt/MQTTJniDemo2/app/src/main/obj/local/armeabi/objs/mqttjni/LinkedList.o: \
+ D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/LinkedList.c \
+ D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/LinkedList.h \
+ D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/Heap.h
 
-jni/mqtt/LinkedList.h:
+D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/LinkedList.h:
 
-jni/mqtt/Heap.h:
+D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/Heap.h:

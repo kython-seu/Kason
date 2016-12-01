@@ -1,12 +1,17 @@
-obj/local/armeabi/objs/mqttjni/Heap.o: jni/mqtt/Heap.c jni/mqtt/Tree.h \
- jni/mqtt/Log.h jni/mqtt/StackTrace.h jni/mqtt/Thread.h jni/mqtt/Heap.h
+D:/workspace/mqtt/MQTTJniDemo2/app/src/main/obj/local/armeabi/objs/mqttjni/Heap.o: \
+ D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/Heap.c \
+ D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/Tree.h \
+ D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/Log.h \
+ D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/StackTrace.h \
+ D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/Thread.h \
+ D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/Heap.h
 
-jni/mqtt/Tree.h:
+D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/Tree.h:
 
-jni/mqtt/Log.h:
+D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/Log.h:
 
-jni/mqtt/StackTrace.h:
+D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/StackTrace.h:
 
-jni/mqtt/Thread.h:
+D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/Thread.h:
 
-jni/mqtt/Heap.h:
+D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/Heap.h:

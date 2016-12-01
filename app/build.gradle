@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.2"
     defaultConfig {
         applicationId "com.example.android.mqttjnidemo2"
-        minSdkVersion 17
+        minSdkVersion 14
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -17,9 +17,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    externalNativeBuild {
+
+    /*externalNativeBuild {
         ndkBuild {
             path 'src/main/jni/Android.mk'
+        }
+    }*/
+    sourceSets{
+        main{
+            jni.srcDirs = []
+            jniLibs.srcDir 'src/main/libs'
         }
     }
 }

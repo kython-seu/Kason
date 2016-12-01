@@ -1,8 +1,11 @@
-obj/local/armeabi/objs/mqttjni/Thread.o: jni/mqtt/Thread.c \
- jni/mqtt/Thread.h jni/mqtt/StackTrace.h jni/mqtt/Log.h
+D:/workspace/mqtt/MQTTJniDemo2/app/src/main/obj/local/armeabi/objs/mqttjni/Thread.o: \
+ D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/Thread.c \
+ D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/Thread.h \
+ D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/StackTrace.h \
+ D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/Log.h
 
-jni/mqtt/Thread.h:
+D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/Thread.h:
 
-jni/mqtt/StackTrace.h:
+D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/StackTrace.h:
 
-jni/mqtt/Log.h:
+D:/workspace/mqtt/MQTTJniDemo2/app/src/main/jni/mqtt/Log.h:

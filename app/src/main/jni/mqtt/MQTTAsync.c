@@ -77,6 +77,8 @@ char* client_version_eye = "MQTTAsyncV3_Version " CLIENT_VERSION;
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #endif
 
+
+
 extern Sockets s;
 
 static ClientStates ClientState =
@@ -412,7 +414,7 @@ int MQTTAsync_checkConn(MQTTAsync_command* command, MQTTAsyncs* client)
 int MQTTAsync_createWithOptions(MQTTAsync* handle, const char* serverURI, const char* clientId,
 		int persistence_type, void* persistence_context,  MQTTAsync_createOptions* options)
 {
-	int rc = 0;
+    int rc = 0;
 	MQTTAsyncs *m = NULL;
 
 	FUNC_ENTRY;
@@ -448,6 +450,7 @@ int MQTTAsync_createWithOptions(MQTTAsync* handle, const char* serverURI, const 
 		handles = ListInitialize();
 		commands = ListInitialize();
 #if defined(OPENSSL)
+        //ddd
 		SSLSocket_initialize();
 #endif
 		initialized = 1;
@@ -455,13 +458,18 @@ int MQTTAsync_createWithOptions(MQTTAsync* handle, const char* serverURI, const 
 	m = malloc(sizeof(MQTTAsyncs));
 	*handle = m;
 	memset(m, '\0', sizeof(MQTTAsyncs));
-	if (strncmp(URI_TCP, serverURI, strlen(URI_TCP)) == 0)
-		serverURI += strlen(URI_TCP);
+    LOGI("UP SSL URL:%s",serverURI);
+	if (strncmp(URI_TCP, serverURI, strlen(URI_TCP)) == 0) {
+        LOGI("TCP");
+        serverURI += strlen(URI_TCP);
+    }
 #if defined(OPENSSL)
 	else if (strncmp(URI_SSL, serverURI, strlen(URI_SSL)) == 0)
 	{
+		LOGI("SSL");
 		serverURI += strlen(URI_SSL);
 		m->ssl = 1;
+		LOGI("SSL URL:%s",serverURI);
 	}
 #endif
 	m->serverURI = MQTTStrdup(serverURI);
@@ -852,7 +860,7 @@ int MQTTAsync_addCommand(MQTTAsync_queuedCommand* command, int command_size)
 		Thread_post_sem(send_sem);
 #endif
 	FUNC_EXIT_RC(rc);
-	LOGI("atter FUNC_EXIT_RC,RC is %d",rc);
+	//LOGI("after FUNC_EXIT_RC,RC is %d",rc);
 	return rc;
 }
 
@@ -2248,8 +2256,10 @@ int MQTTAsync_connect(MQTTAsync handle, const MQTTAsync_connectOptions* options)
 	}
 	
 #if defined(OPENSSL)
+    LOGI("has defined OPENSSL");
 	if (m->c->sslopts)
 	{
+		LOGI("start ssl");
 		if (m->c->sslopts->trustStore)
 			free((void*)m->c->sslopts->trustStore);
 		if (m->c->sslopts->keyStore)
@@ -2266,6 +2276,7 @@ int MQTTAsync_connect(MQTTAsync handle, const MQTTAsync_connectOptions* options)
 
 	if (options->struct_version != 0 && options->ssl)
 	{
+		LOGI("put parameter into m->c->sslopts");
 		m->c->sslopts = malloc(sizeof(MQTTClient_SSLOptions));
 		memset(m->c->sslopts, '\0', sizeof(MQTTClient_SSLOptions));
 		if (options->ssl->trustStore)
