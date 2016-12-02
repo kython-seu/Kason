@@ -59,6 +59,35 @@ struct {
         "stdout-subscriber-async", 1, '\n', 2, NULL, NULL, "10.64.24.53", "8883", 0, 1800
 };
 
+void pushCommandMessageToJava(unsigned char* bytes,jsize len){
+    //Attach主线程
+    JNIEnv *env;
+    if((*g_jvm)->AttachCurrentThread(g_jvm, &env, NULL) != JNI_OK) {
+        LOGE("AttachCurrentThread() failed");
+        return;
+    }
+    if(env == NULL){
+        LOGE("env is NULL");
+        goto error;
+    }
+    jclass cls = (*env)->GetObjectClass(env,g_obj);
+    if(cls == NULL) {
+        LOGE("FindClass() Error.....");
+        goto error;
+    }
+    jmethodID mid = (*env)->GetMethodID(env,cls,"getCommand","([B)V");
+    if(mid==NULL){
+        goto error;
+    }
+    jbyteArray byteArr_return = (*env)->NewByteArray(env,len);
+    (*env)->SetByteArrayRegion(env,byteArr_return,0,len,bytes);
+    (*env)->CallVoidMethod(env,g_obj,mid,byteArr_return);
+    error:
+    //Detach主线程
+    if((*g_jvm)->DetachCurrentThread(g_jvm) != JNI_OK) {
+        LOGE("DetachCurrentThread() failed");
+    }
+}
 int messageArrived(void *context, char *topicName, int topicLen, MQTTAsync_message *message) {
     if (opts.showtopics) {
         LOGI("%s\t", topicName);
@@ -66,14 +95,15 @@ int messageArrived(void *context, char *topicName, int topicLen, MQTTAsync_messa
     }
     //callJavaMethod((jint)1000);
     LOGI("message length is %d",message->payloadlen);
-
+    jsize len = message->payloadlen;
     if (opts.nodelimiter) {
         LOGI("nodelimiter%s", (char *)message->payload);
+        pushCommandMessageToJava((unsigned char*)message->payload,len);
         //callJavaMethod2(message->payload);
         printf("%.*s", message->payloadlen, (char *) message->payload);
     } else {
         LOGI("no_nodelimiter%s", (char *)message->payload);
-
+        pushCommandMessageToJava((unsigned char*)message->payload,len);
         //callJavaMethod2(message->payload);
         printf("%.*s%c", message->payloadlen, (char *) message->payload, opts.delimiter);
     }
@@ -267,11 +297,12 @@ JNIEXPORT jint JNICALL Java_mqttPush_MqttEngine_connect
      */
     ssl_opts.enableServerCertAuth = 1;
     conn_opts.ssl = &ssl_opts;
+    //one-way authentication
     char *server_key_file = "/mnt/sdcard/mqttca/ca.pem";
     conn_opts.ssl->trustStore = server_key_file;
-    char *client_key_file = "/mnt/sdcard/mqttca/client.pem";
-    conn_opts.ssl->keyStore = client_key_file;
-    conn_opts.ssl->privateKey = "/mnt/sdcard/mqttca/client.key";
+    //char *client_key_file = "/mnt/sdcard/mqttca/client.pem";
+    //conn_opts.ssl->keyStore = client_key_file;
+    //conn_opts.ssl->privateKey = "/mnt/sdcard/mqttca/client.key";
     //conn_opts.ssl->privateKeyPassword = "cs";
     ssl_opts.enabledCipherSuites = "TLSv1";
 
@@ -337,26 +368,24 @@ JNIEXPORT jboolean JNICALL Java_mqttPush_MqttEngine_disconnect
 }
 //Send Message to Server
 JNIEXPORT void JNICALL Java_mqttPush_MqttEngine_sendMessage
-        (JNIEnv *env, jobject thiz,jstring responseToServer){
+        (JNIEnv *env, jobject thiz,jbyteArray byteArr){
     if (client == NULL) {
         LOGI("It seems that you haven't establish creation beetween Android Client and Broker");
         return;
     }
     //get the data
-    //char *c_responseToServer = jstringTostring(env,responseToServer);
-    char *c_responseToServer = (char*)(*env)->GetStringUTFChars(env,responseToServer,NULL);
-
-    LOGI("jstring to char* %s",c_responseToServer);
-    (*env)->ReleaseStringUTFChars(env,responseToServer,c_responseToServer);
+    jsize len = (*env)->GetArrayLength(env,byteArr);
+    jbyte *jbyteArr = (jbyte*)malloc(len* sizeof(jbyte));
+    (*env)->GetByteArrayRegion(env,byteArr,0,len,jbyteArr);
+    unsigned char *c_byteArr = (unsigned char*)jbyteArr;
     int rc;
     MQTTAsync_responseOptions opts = MQTTAsync_responseOptions_initializer;
     opts.onSuccess = onSend;
     opts.onFailure = onSendFailure;
     opts.context = client;
     MQTTAsync_message pubmsg = MQTTAsync_message_initializer;
-    pubmsg.payload = c_responseToServer;
-    //pubmsg.payload = c_responseToServer;
-    pubmsg.payloadlen = strlen(c_responseToServer);//message length
+    pubmsg.payload = c_byteArr;//message content
+    pubmsg.payloadlen = len;//message length
     pubmsg.qos = 2;
     pubmsg.retained = 0;
 

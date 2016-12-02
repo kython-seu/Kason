@@ -50,10 +50,10 @@ JNIEXPORT jstring JNICALL Java_mqttPush_MqttEngine_getCommand
 /*
  * Class:     mqttPush_MqttEngine
  * Method:    sendMessage
- * Signature: (Ljava/lang/String;)V
+ * Signature: ([B)V
  */
 JNIEXPORT void JNICALL Java_mqttPush_MqttEngine_sendMessage
-  (JNIEnv *, jobject, jstring);
+  (JNIEnv *, jobject, jbyteArray);
 
 /*
  * Class:     mqttPush_MqttEngine

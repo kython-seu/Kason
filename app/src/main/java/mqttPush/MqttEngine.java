@@ -4,6 +4,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * Created by kason_zhang on 11/23/2016.
  * Team:TrendMicro VMI
@@ -30,8 +32,8 @@ public class MqttEngine {
 
     public native boolean disconnect();
 
-    public native String getCommand();
-    public native void sendMessage(String responseToServer);
+
+    public native void sendMessage(byte[] bytes);
 
     public native int getGlobal();
     //start connect callback
@@ -46,5 +48,15 @@ public class MqttEngine {
         Message message = mHandler.obtainMessage(MdmConstant.MQTT_STATE_FINISHED_CONNECT);
         mHandler.sendMessage(message);
     }
+    //receive command
+    public void getCommand(byte[] bytes){
+        String response = "";
+        try {
+            response = new String(bytes,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        Log.i(TAG, "getCommand: command is "+response);
 
+    }
 }

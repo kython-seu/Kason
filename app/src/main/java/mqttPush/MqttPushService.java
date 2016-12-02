@@ -95,7 +95,7 @@ public class MqttPushService extends Service {
 
         }else if("sendmessage".equals(action)){
             String responseToServer = intent.getStringExtra("responseToServer");
-            mqttEngine.sendMessage(responseToServer);
+            mqttEngine.sendMessage(responseToServer.getBytes());
         }
         else{
             Log.i(TAG, "onStartCommand: NO ACTION");

@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -127,16 +128,18 @@ public class MainActivity extends AppCompatActivity {
                         intent.setAction("sendmessage");
                         Calendar calendar = Calendar.getInstance();
                         SimpleDateFormat simpleDateFormat =
-                                new SimpleDateFormat("yyyy-MM-dd HH:mm:SS", Locale.ENGLISH);
+                                new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
                         String time = simpleDateFormat.format(calendar.getTime());
+                        Random random = new Random();
+
                         String responseToServer = time + ": Java Receives the Result," +
-                                "Response to you"+"你好";
+                                "Response to you"+"你好"+random.nextInt(1000);
                         intent.putExtra("responseToServer",responseToServer);
                         startService(intent);
                     }
                 };
                 Timer timer = new Timer();
-                timer.schedule(timerTask,1000,1000*2);
+                timer.schedule(timerTask,1000,1000*10);
 
             }
         });
